@@ -1,0 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  resize: none;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+@font-face {
+  font-family: roboto;
+  src:
+    url('assets/fonts/roboto.ttf') format('ttf'),
+    url('assets/fonts/roboto.eot') format('eot'),
+    url('assets/fonts/roboto.woff') format('woff'),
+    url('assets/fonts/roboto.woff2') format('woff2')
+  ;
+}
