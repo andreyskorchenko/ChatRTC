@@ -1,0 +1,51 @@
+.room {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(auto, 50%);
+  gap: 20px;
+  padding: 20px 20px 80px 20px;
+}
+
+.client {
+  background-color: #1A1B20;
+  box-shadow: 0 0 1px 0 rgba(0,0,0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.panel {
+  width: 100%;
+  height: 60px;
+  background-color: #1A1B20;
+  box-shadow: 0 0 1px 0 rgba(0,0,0, 0.1);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  &__end {
+    height: 40px;
+    background-color: #EF5A5C;
+    border-radius: 5px;
+    padding: 0 20px;
+    color: #FFF;
+    font-family: roboto;
+    cursor: pointer;
+  }
+}
