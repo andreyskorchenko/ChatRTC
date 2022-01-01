@@ -1,7 +1,9 @@
 import React from 'react';
 
+import Room from '~/pages/room';
+
 const App = () => {
-  return (<h1>WebRTC</h1>);
+  return <Room />;
 };
 
 export default App;
