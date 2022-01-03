@@ -11,8 +11,6 @@
   "author": "Andrey Skorchenko <andreyskorchenko@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.17.2",
     "module-alias": "^2.2.2",
     "uuid": "^8.3.2",
     "ws": "^8.4.0"
