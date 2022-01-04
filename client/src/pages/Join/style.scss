@@ -1,0 +1,52 @@
+.join {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form {
+  width: 320px;
+  height: 60px;
+  background-color: #1A1B20;
+  box-shadow: 0 0 1px 0 rgba(0,0,0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+
+  input {
+    width: 100%;
+    height: 60px;
+    background-color: transparent;
+    color: #FFF;
+    padding: 0 110px 0 20px;
+    font-family: roboto;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    &::placeholder {
+      color: #3D3D3D;
+    }
+  }
+
+  button {
+    width: 80px;
+    height: 40px;
+    background-color: #2983FB;
+    border-radius: 5px;
+    color: #FFF;
+    font-family: roboto;
+    cursor: pointer;
+    transform: translate(0, -50%);
+    position: absolute;
+    top: 50%;
+    right: 10px;
+
+    &:disabled {
+      background-color: #21242B;
+      cursor: default;
+    }
+  }
+}
