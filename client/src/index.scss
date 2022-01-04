@@ -12,7 +12,12 @@ a {
 }
 
 body {
+  height: 100vh;
   background-color: #21242B;
+}
+
+#root {
+  height: 100%;
 }
 
 @font-face {
