@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch, Route, Redirect
 } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ const App = () => {
     <Router>
       <Switch>
         <Route exact path='/' component={Join} />
-        <Route path='/room' component={Room} />
+        <Route path='/room/:nickname' component={Room} />
         <Redirect to='/' />
       </Switch>
     </Router>
