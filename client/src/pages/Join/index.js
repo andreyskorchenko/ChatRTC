@@ -3,17 +3,20 @@ import './style.scss';
 
 const Join = () => {
   const [ nickname, setNickname ] = useState('');
+  const [ inProcess, setInProcess ] = useState(false);
   const [ isDisabled, setIsDisabled ] = useState(true);
-  
-  const handlerSetNickname = ({ target }) => setNickname(target.value.trim());
-  const isValidNickname = value => new RegExp('^[a-z0-9]{1,30}$', 'i').test(value);
 
-  useEffect(() => setIsDisabled(!isValidNickname(nickname)), [ nickname ]);
-  
-  const handlerJoin = ({ code, type }) => {
+  useEffect(() => {
+    setIsDisabled(!(/^[a-z0-9]{1,30}$/i.test(nickname)));
+  }, [nickname]);
+
+  const handlerSetNickname = ({ target }) => {
+    setNickname(target.value.trim().toLowerCase());
+  };
+
+  const handlerJoin = async ({ code, type }) => {
     const allowKeys = ['Enter', 'NumpadEnter', 'click'];
     if (!allowKeys.includes(code || type) || isDisabled) return;
-    console.log('Enter:', nickname);
   };
 
   return (
@@ -28,7 +31,12 @@ const Join = () => {
           onChange={handlerSetNickname}
         />
         
-        <button disabled={isDisabled} onClick={handlerJoin}>JOIN</button>
+        <button
+          disabled={isDisabled}
+          onClick={handlerJoin}
+        >
+          JOIN
+        </button>
       </div>
     </div>
   );
