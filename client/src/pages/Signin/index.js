@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import fingerprint from '@fingerprintjs/fingerprintjs';
+import axios from 'axios';
 import './style.scss';
 
-const Join = () => {
+const Signin = () => {
   const [ nickname, setNickname ] = useState('');
   const [ inProcess, setInProcess ] = useState(false);
   const [ isDisabled, setIsDisabled ] = useState(true);
@@ -14,26 +16,29 @@ const Join = () => {
     setNickname(target.value.trim().toLowerCase());
   };
 
-  const handlerJoin = async ({ code, type }) => {
+  const handlerSignin = async ({ code, type }) => {
     const allowKeys = ['Enter', 'NumpadEnter', 'click'];
     if (!allowKeys.includes(code || type) || isDisabled) return;
+    const uid = await (await (await fingerprint.load()).get()).visitorId;
+    const { data: response } = await axios.post('http://localhost:3000/auth/signin', { uid, nickname });
+    console.log(response);
   };
 
   return (
-    <div className='join'>
+    <div className='signin'>
       <div className='form'>
         <input type="text"
           autoFocus
           placeholder='Nickname'
           maxLength='30'
-          onKeyUp={handlerJoin}
+          onKeyUp={handlerSignin}
           value={nickname}
           onChange={handlerSetNickname}
         />
         
         <button
           disabled={isDisabled}
-          onClick={handlerJoin}
+          onClick={handlerSignin}
         >
           JOIN
         </button>
@@ -42,4 +47,4 @@ const Join = () => {
   );
 };
 
-export default Join;
+export default Signin;

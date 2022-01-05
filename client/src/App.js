@@ -5,14 +5,14 @@ import {
   Switch, Route
 } from 'react-router-dom';
 
-import Join from '~/pages/Join';
+import Signin from '~/pages/Signin';
 import Room from '~/pages/Room';
 
 const App = () => {
   return (
     <Router>
       <Switch>
-        <Route exact path='/' component={Join} />
+        <Route exact path='/' component={Signin} />
         <Route path='/room' component={Room} />
       </Switch>
     </Router>
