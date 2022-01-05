@@ -2,7 +2,7 @@ import React from 'react';
 
 import {
   HashRouter as Router,
-  Switch, Route, Redirect
+  Switch, Route
 } from 'react-router-dom';
 
 import Join from '~/pages/Join';
@@ -13,8 +13,7 @@ const App = () => {
     <Router>
       <Switch>
         <Route exact path='/' component={Join} />
-        <Route path='/room/:nickname' component={Room} />
-        <Redirect to='/' />
+        <Route path='/room' component={Room} />
       </Switch>
     </Router>
   );
