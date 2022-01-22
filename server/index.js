@@ -1,0 +1,61 @@
+const express = require('express');
+const cors = require('cors');
+const { WebSocketServer } = require('ws');
+const { v4 } = require('uuid');
+
+const HT_PORT = 3000;
+const HT_HOST = 'localhost';
+
+const WS_PORT = 3030;
+const WS_HOST = 'localhost';
+
+const room = new Map([
+  ['clients', new Map()]
+]);
+
+/**
+ * WS Server
+*/
+const WSServer = new WebSocketServer({ host: WS_HOST, port: WS_PORT });
+
+/**
+ * HTTP Server
+*/
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.post('/auth/signin', (req, res) => {
+  try {
+    const [ uid, nickname ] = [
+      req.body.uid.trim().toLowerCase(),
+      req.body.nickname.trim().toLowerCase(),
+    ];
+    
+    if (!uid || !nickname) throw new Error('Invalid request');
+    const clients = room.get('clients');
+    
+    if (!clients.has(nickname)) {
+      clients.set(nickname, uid);
+      return res.status(201).json({
+        status: 'ok',
+        payload: { token: uid, nickname }
+      });
+    }
+
+    if (clients.get(nickname) === uid) {
+      return res.status(200).json({
+        status: 'ok',
+        payload: { token: uid, nickname }
+      });
+    }
+    
+    throw new Error('Invalid auth data');
+  } catch ({ message }) {
+    return res.status(400).json({ status: 'error', message });
+  }
+});
+
+app.listen(HT_PORT, HT_HOST, () => {
+  console.log(`HTTP Server started: ${HT_HOST} on ${HT_PORT}`);
+});
