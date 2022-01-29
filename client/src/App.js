@@ -2,18 +2,27 @@ import React from 'react';
 
 import {
   HashRouter as Router,
-  Switch, Route
+  Switch, Route, Redirect
 } from 'react-router-dom';
 
 import Signin from '~/pages/Signin';
 import Room from '~/pages/Room';
 
+const isAuto = false;
+
 const App = () => {
-  return (
+  return isAuto ? (
     <Router>
       <Switch>
-        <Route exact path='/' component={Signin} />
-        <Route path='/room' component={Room} />
+        <Route exact path="/room" component={Room} />
+        <Redirect to="/room" />
+      </Switch>
+    </Router>
+  ) : (
+    <Router>
+      <Switch>
+        <Route exact path="/signin" component={Signin} />
+        <Redirect to="/signin" />
       </Switch>
     </Router>
   );
