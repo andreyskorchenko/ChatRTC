@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   HashRouter as Router,
@@ -8,10 +9,10 @@ import {
 import Signin from '~/pages/Signin';
 import Room from '~/pages/Room';
 
-const isAuto = false;
-
 const App = () => {
-  return isAuto ? (
+  const { isAuth } = useSelector(state => state);
+
+  return isAuth ? (
     <Router>
       <Switch>
         <Route exact path="/room" component={Room} />
