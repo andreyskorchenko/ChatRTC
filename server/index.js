@@ -29,28 +29,22 @@ app.post('/auth/signin', (req, res) => {
   try {
     const [ uid, nickname ] = [
       req.body.uid.trim().toLowerCase(),
-      req.body.nickname.trim().toLowerCase(),
+      req.body.nickname.trim().toLowerCase()
     ];
     
-    if (!uid || !nickname) throw new Error('Invalid request');
-    const clients = room.get('clients');
+    if (!uid.length || !nickname.length) throw new Error('Invalid user data');
     
-    if (!clients.has(nickname)) {
-      clients.set(nickname, uid);
-      return res.status(201).json({
-        status: 'ok',
-        payload: { token: uid, nickname }
-      });
+    const clients = room.get('clients');
+    if (clients.has(nickname)) throw new Error('Nickname is taken');
+    for (const [, _uid] of clients) {
+      if (_uid === uid) throw new Error('You uid is taken');
     }
 
-    if (clients.get(nickname) === uid) {
-      return res.status(200).json({
-        status: 'ok',
-        payload: { token: uid, nickname }
-      });
-    }
-    
-    throw new Error('Invalid auth data');
+    clients.set(nickname, uid);
+    return res.status(200).json({
+      status: 'ok',
+      payload: { nickname, uid }
+    });
   } catch ({ message }) {
     return res.status(400).json({ status: 'error', message });
   }
