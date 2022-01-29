@@ -56,6 +56,28 @@ app.post('/auth/signin', (req, res) => {
   }
 });
 
+app.post('/auth/check', (req, res) => {
+  try {
+    const { uid } = req.body;
+    const clients = room.get('clients');
+    for (const [_nickname, _uid] of clients) {
+      if (uid === _uid) {
+        return res.status(200).json({
+          status: 'ok',
+          payload: {
+            nickname: _nickname,
+            uid: _uid
+          }
+        });
+      }
+    }
+    
+    throw new Error('Invalid auth data');
+  } catch ({ message }) {
+    return res.status(401).json({ status: 'error', message });
+  }
+});
+
 app.listen(HT_PORT, HT_HOST, () => {
   console.log(`HTTP Server started: ${HT_HOST} on ${HT_PORT}`);
 });
