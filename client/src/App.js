@@ -1,15 +1,18 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   HashRouter as Router,
   Switch, Route, Redirect
 } from 'react-router-dom';
 
+import { authCheck } from '~/store/actions/authActions';
 import Signin from '~/pages/Signin';
 import Room from '~/pages/Room';
 
 const App = () => {
+  const dispatch = useDispatch();
+  useEffect(() => dispatch(authCheck()), []);
   const { isAuth } = useSelector(({ auth }) => auth);
 
   return isAuth ? (
