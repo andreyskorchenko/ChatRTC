@@ -1,15 +1,11 @@
-import { createStore } from 'redux';
-import { AUTH_SIGNIN } from './types';
+import { createStore, combineReducers } from 'redux';
 
-const initialState = { isAuth: false };
+import authReducer from './reducers/authReducer';
 
-const store = createStore((state = initialState, action) => {
-  switch (action.type) {
-    case AUTH_SIGNIN:
-      return { ...state, ...action.payload, isAuth: true };
-    default:
-      return state;
-  }
-});
+const store = createStore(
+  combineReducers({
+    auth: authReducer
+  })
+);
 
 export default store;
