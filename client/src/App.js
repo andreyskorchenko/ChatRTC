@@ -10,7 +10,7 @@ import Signin from '~/pages/Signin';
 import Room from '~/pages/Room';
 
 const App = () => {
-  const { isAuth } = useSelector(state => state);
+  const { isAuth } = useSelector(({ auth }) => auth);
 
   return isAuth ? (
     <Router>
