@@ -13,7 +13,7 @@ cd webrtc
 ```
 
 ## Project setup for client
-## Change directory
+### Change directory
 
 ```
 cd client
@@ -36,7 +36,7 @@ npm run build
 ```
 
 ## Project setup for server
-## Change directory
+### Change directory
 
 ```
 cd server
