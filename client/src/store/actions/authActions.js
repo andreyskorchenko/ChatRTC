@@ -1,6 +1,7 @@
 import axios from 'axios';
 import fingerprint from '@fingerprintjs/fingerprintjs';
 import { AUTH_CHECK, AUTH_SIGNIN } from '~/store/types';
+import { preloaderSigninShow, preloaderSigninHide } from '~/store/actions/preloadersActions';
 
 export const authCheck = () => async dispatch => {
   try {
@@ -18,6 +19,7 @@ export const authCheck = () => async dispatch => {
 
 export const authSignin = nickname => async dispatch => {
   try {
+    dispatch(preloaderSigninShow());
     const uid = await (await (await fingerprint.load()).get()).visitorId;
     const { status, payload } = (await axios.post('http://localhost:3000/auth/signin', {
       nickname, uid
@@ -30,5 +32,7 @@ export const authSignin = nickname => async dispatch => {
     throw new Error('Error on server');
   } catch ({ message }) {
     console.log('Error:', message);
+  } finally {
+    dispatch(preloaderSigninHide());
   }
 };
