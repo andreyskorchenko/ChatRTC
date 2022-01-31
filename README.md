@@ -13,11 +13,12 @@ cd webrtc
 ```
 
 ## Project setup for client
-### Change directory
+#### Change directory
 
 ```
 cd client
 ```
+#### Install dependencies
 
 ```
 npm install
