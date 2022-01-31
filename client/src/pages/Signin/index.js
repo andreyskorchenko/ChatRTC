@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { authSignin } from '~/store/actions/authActions';
 import './style.scss';
 
 const Signin = () => {
   const dispatch = useDispatch();
+  const { signin: preloaderSignin } = useSelector(({ preloaders }) => preloaders);
   const [ nickname, setNickname ] = useState('');
   const [ isDisabled, setIsDisabled ] = useState(true);
 
@@ -29,13 +30,14 @@ const Signin = () => {
           autoFocus
           placeholder='Nickname'
           maxLength='30'
+          readOnly={preloaderSignin}
           onKeyUp={handlerSignin}
           value={nickname}
           onChange={handlerSetNickname}
         />
         
         <button
-          disabled={isDisabled}
+          disabled={isDisabled || preloaderSignin}
           onClick={handlerSignin}
         >
           JOIN
