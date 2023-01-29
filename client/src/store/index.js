@@ -7,10 +7,9 @@ import preloadersReducer from '~/store/reducers/preloadersReducer';
 const store = createStore(
   combineReducers({
     auth: authReducer,
-    preloaders: preloadersReducer
-  }), compose(
-    applyMiddleware(thunk)
-  )
+    preloaders: preloadersReducer,
+  }),
+  compose(applyMiddleware(thunk))
 );
 
 export default store;
