@@ -1,4 +1,4 @@
-import { PRELOADER_SIGNIN_SHOW, PRELOADER_SIGNIN_HIDE } from '~/store/types';
+import { PRELOADER_SIGNIN_SHOW, PRELOADER_SIGNIN_HIDE } from '@/store/types';
 
 const initialState = { signin: false };
 const preloadersReducer = (state = initialState, action) => {

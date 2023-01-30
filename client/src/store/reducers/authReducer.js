@@ -1,4 +1,4 @@
-import { AUTH_CHECK, AUTH_SIGNIN } from '~/store/types';
+import { AUTH_CHECK, AUTH_SIGNIN } from '@/store/types';
 
 const initialState = { isAuth: false };
 const authReducer = (state = initialState, action) => {
