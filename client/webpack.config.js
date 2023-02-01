@@ -1,13 +1,12 @@
 const { resolve } = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
 const isDev = process.env.MODE_BUILD === 'development';
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
-  devtool: 'source-map',
-  entry: resolve(__dirname, 'src/index.js'),
+  devtool: isDev ? 'source-map' : false,
+  entry: resolve(__dirname, 'src/index.tsx'),
   output: {
     filename: 'js/[contenthash].js',
     path: resolve(__dirname, 'dist'),
@@ -27,7 +26,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|ts)(x)?$/,
         exclude: '/node_modules/',
         use: [{ loader: 'babel-loader' }],
       },
@@ -62,9 +61,9 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@/': resolve(__dirname, 'src'),
+      '@/pages': resolve(__dirname, 'src/pages'),
     },
-    extensions: ['.ts', '.tsx', '.js', '.json'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
   },
   plugins: [
     new HTMLWebpackPlugin({ template: resolve(__dirname, 'public/index.html') }),
