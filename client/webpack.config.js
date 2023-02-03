@@ -61,6 +61,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      '@/public': resolve(__dirname, 'public'),
       '@/pages': resolve(__dirname, 'src/pages'),
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
