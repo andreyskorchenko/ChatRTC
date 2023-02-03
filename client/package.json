@@ -2,7 +2,7 @@
   "name": "webrtc-client",
   "version": "1.0.0",
   "private": true,
-  "main": "./src/index.js",
+  "main": "src/index.tsx",
   "scripts": {
     "dev": "cross-env MODE_BUILD=development webpack serve",
     "build": "cross-env MODE_BUILD=production webpack"
