@@ -1,19 +1,19 @@
-# webrtc
+# ChatRTC
 
 #### Git clone
 
 ```
-git clone https://github.com/andreyskorchenko/webrtc.git
+git clone https://github.com/andreyskorchenko/chatrtc.git
 ```
 
 #### Change directory
 
 ```
-cd webrtc
+cd chatrtc
 ```
 
 ## Project setup for client
-#### Change directory from `webrtc` project root folder
+#### Change directory from `chatrtc` project root folder
 
 ```
 cd client
@@ -38,7 +38,7 @@ npm run build
 ```
 
 ## Project setup for server
-#### Change directory from `webrtc` project root folder
+#### Change directory from `chatrtc` project root folder
 
 ```
 cd server
