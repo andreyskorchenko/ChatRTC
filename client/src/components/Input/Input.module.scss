@@ -1,17 +1,16 @@
 .input {
-  border-radius: 8px;
+  background-color: transparent;
   font-family: roboto;
-  padding: 0 16px;
 
   &_size_s {
-    height: 32px;
+    height: 42px;
   }
 
   &_size_m {
-    height: 40px;
+    height: 46px;
   }
 
   &_size_l {
-    height: 60px;
+    height: 54px;
   }
 }
