@@ -34,7 +34,14 @@ module.exports = {
         test: /\.(s)?css$/,
         use: [
           { loader: isDev ? 'style-loader' : MiniCssExtractPlugin.loader },
-          { loader: 'css-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: '[folder]_[local]_[hash:base64:5]',
+              },
+            },
+          },
           { loader: 'postcss-loader' },
           { loader: 'sass-loader' },
         ],
