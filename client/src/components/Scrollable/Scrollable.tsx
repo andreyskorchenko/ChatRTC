@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { useState, useMemo, useRef, useEffect, WheelEvent, PropsWithChildren } from 'react';
+import { useState, useMemo, useRef, useEffect, WheelEvent, MouseEvent, PropsWithChildren } from 'react';
 import styles from './Scrollable.module.scss';
 
 export const Scrollable = ({ children }: PropsWithChildren) => {
@@ -16,7 +16,7 @@ export const Scrollable = ({ children }: PropsWithChildren) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
 
   const isScrollbar = useMemo(() => contentHeight > containerHeight, [contentHeight, containerHeight]);
-  const scrollableHeight = useMemo(() => contentHeight - containerHeight, [contentHeight, containerHeight]);
+  const scrollableHeight = useMemo(() => Math.floor(contentHeight - containerHeight), [contentHeight, containerHeight]);
 
   const thumbHeight = useMemo(() => {
     const height = Math.ceil((containerHeight / 100) * ((100 / contentHeight) * scrollbarHeight));
@@ -63,10 +63,39 @@ export const Scrollable = ({ children }: PropsWithChildren) => {
     if (Math.abs(scrollPosition) > scrollableHeight) {
       setScrollPosition(scrollableHeight * -1);
     }
-  }, [scrollableHeight])
+  }, [scrollableHeight]);
+  
+  const draggingThumb = ({ clientY }: MouseEvent<HTMLDivElement>) => {
+    if (!isMouseDown) return;
+    const percent = (100 / containerHeight) * clientY;
+    setScrollPosition(Math.ceil(scrollableHeight / 100 * (percent < 0 ? 0 : percent)) * -1);
+  };
+
+  const canceledSelectionAndDraggable = (e: Event) => {
+    if (isMouseDown) {
+      e.preventDefault();
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('selectstart', canceledSelectionAndDraggable);
+    document.addEventListener('dragstart', canceledSelectionAndDraggable);
+
+    return () => {
+      document.removeEventListener('selectstart', canceledSelectionAndDraggable);
+      document.removeEventListener('dragstart', canceledSelectionAndDraggable);
+    };
+  }, [isMouseDown])
 
   return (
-    <div className={styles.scrollable} ref={scrollableRef} onWheel={handlerScrolling} draggable={false}>
+    <div
+      ref={scrollableRef}
+      className={styles.scrollable}
+      onWheel={handlerScrolling}
+      onMouseMove={draggingThumb}
+      onMouseUp={() => setIsMouseDown(false)}
+      onMouseLeave={() => setIsMouseDown(false)}
+    >
       <div
         className={cn(styles.scrollable__content, { [styles.scrollable__content_scrollbar]: isScrollbar })}
         ref={contentRef}
@@ -79,7 +108,12 @@ export const Scrollable = ({ children }: PropsWithChildren) => {
         className={cn(styles.scrollable__scrollbar, { [styles.scrollable__scrollbar_hide]: !isScrollbar })}
         ref={scrollbarRef}
       >
-        <div className={styles.scrollable__thumb} ref={thumbRef} style={{ height: thumbHeight, top: thumbTop }}></div>
+        <div
+          ref={thumbRef}
+          className={styles.scrollable__thumb}
+          style={{ height: thumbHeight, top: thumbTop }}
+          onMouseDown={() => setIsMouseDown(true)}
+        ></div>
       </div>
     </div>
   );
