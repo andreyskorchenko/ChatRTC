@@ -1,37 +1,40 @@
+import { useRef, useState, useMemo, useEffect, WheelEvent, MouseEvent, PropsWithChildren } from 'react';
 import cn from 'classnames';
-import { useState, useMemo, useRef, useEffect, WheelEvent, MouseEvent, PropsWithChildren } from 'react';
 import styles from './Scrollable.module.scss';
 
 export const Scrollable = ({ children }: PropsWithChildren) => {
-  const scrollableRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const scrollbarRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
 
-  const [containerHeight, setContainerHeight] = useState(1);
-  const [contentHeight, setContentHeight] = useState(1);
-  const [scrollbarHeight, setScrollbarHeight] = useState(0);
-
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [containerHeight, setContainerHeight] = useState(0);
+  const [contentHeight, setContentHeight] = useState(0);
+  const [scrollbarHeight, setScrollbarHeight] = useState(0);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
-  const isScrollbar = useMemo(() => contentHeight > containerHeight, [contentHeight, containerHeight]);
-  const scrollableHeight = useMemo(() => Math.floor(contentHeight - containerHeight), [contentHeight, containerHeight]);
+  const scrollableHeight = useMemo(() => {
+    const height = contentHeight - containerHeight;
+    return height < 0 ? 0 : Math.floor(height);
+  }, [contentHeight]);
+
+  const isScrollbar = useMemo(() => scrollableHeight > 0, [scrollableHeight]);
 
   const thumbHeight = useMemo(() => {
-    const height = Math.ceil((containerHeight / 100) * ((100 / contentHeight) * scrollbarHeight));
-    return height <= 16 ? 16 : height;
-  }, [containerHeight, contentHeight, scrollbarHeight]);
+    const height = (100 / (contentHeight || 1)) * containerHeight * (scrollbarHeight / 100);
+    return height <= 16 ? 16 : height >= scrollbarHeight ? scrollbarHeight : height;
+  }, [contentHeight]);
 
   const thumbTop = useMemo(() => {
-    const percent = Math.floor((100 / (scrollableHeight || 1)) * Math.abs(scrollPosition));
-    return ((scrollbarHeight - thumbHeight) / 100) * percent;
-  }, [thumbHeight, scrollPosition]);
+    const percentScrolling = (100 / (scrollableHeight || 1)) * Math.abs(scrollPosition);
+    return Math.ceil(((scrollbarHeight - thumbHeight) / 100) * percentScrolling);
+  }, [scrollableHeight, scrollPosition]);
 
   const handlerScrolling = ({ deltaY }: WheelEvent) => {
     if (deltaY === 0) return;
 
-    // console.log('[CONTAINER]:', scrollableRef.current?.clientHeight);
+    // console.log('[CONTAINER]:', containerRef.current?.clientHeight);
     // console.log('[CONTENT]:', contentRef.current?.clientHeight);
     // console.log('[SCROLLBAR]:', scrollbarRef.current?.clientHeight);
     // console.log('[THUMB]:', thumbRef.current?.clientHeight);
@@ -42,21 +45,36 @@ export const Scrollable = ({ children }: PropsWithChildren) => {
     });
   };
 
+  const draggingThumb = ({ clientY }: MouseEvent<HTMLDivElement>) => {
+    if (!isMouseDown && containerHeight > 0) return;
+    const percentDrag = (100 / containerHeight) * clientY;
+    setScrollPosition(Math.ceil((scrollableHeight / 100) * (percentDrag <= 0 ? 0 : percentDrag)) * -1);
+  };
+
+  const canceledSelectionAndDraggable = (e: Event) => {
+    if (isMouseDown) {
+      e.preventDefault();
+    }
+  };
+
   useEffect(() => {
-    setContainerHeight(scrollableRef.current?.clientHeight || 1);
-    setContentHeight(contentRef.current?.clientHeight || 1);
+    setContainerHeight(containerRef.current?.clientHeight || 0);
+    setContentHeight(contentRef.current?.clientHeight || 0);
     setScrollbarHeight(scrollbarRef.current?.clientHeight || 0);
 
     if (!contentRef.current) return;
-    const observer = new ResizeObserver(([{ contentRect: { height } }]) => {
-      setContentHeight(height);
-    });
+    const observer = new ResizeObserver(
+      ([
+        {
+          contentRect: { height },
+        },
+      ]) => {
+        setContentHeight(height);
+      }
+    );
 
     observer.observe(contentRef.current);
-
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -64,18 +82,6 @@ export const Scrollable = ({ children }: PropsWithChildren) => {
       setScrollPosition(scrollableHeight * -1);
     }
   }, [scrollableHeight]);
-  
-  const draggingThumb = ({ clientY }: MouseEvent<HTMLDivElement>) => {
-    if (!isMouseDown) return;
-    const percent = (100 / containerHeight) * clientY;
-    setScrollPosition(Math.ceil(scrollableHeight / 100 * (percent < 0 ? 0 : percent)) * -1);
-  };
-
-  const canceledSelectionAndDraggable = (e: Event) => {
-    if (isMouseDown) {
-      e.preventDefault();
-    }
-  }
 
   useEffect(() => {
     document.addEventListener('selectstart', canceledSelectionAndDraggable);
@@ -85,35 +91,32 @@ export const Scrollable = ({ children }: PropsWithChildren) => {
       document.removeEventListener('selectstart', canceledSelectionAndDraggable);
       document.removeEventListener('dragstart', canceledSelectionAndDraggable);
     };
-  }, [isMouseDown])
+  }, [isMouseDown]);
 
   return (
     <div
-      ref={scrollableRef}
-      className={styles.scrollable}
+      ref={containerRef}
+      className={styles.container}
       onWheel={handlerScrolling}
       onMouseMove={draggingThumb}
       onMouseUp={() => setIsMouseDown(false)}
       onMouseLeave={() => setIsMouseDown(false)}
     >
       <div
-        className={cn(styles.scrollable__content, { [styles.scrollable__content_scrollbar]: isScrollbar })}
         ref={contentRef}
+        className={cn(styles.content, { [styles.content_scrollbar]: isScrollbar })}
         style={{ top: `${scrollPosition}px` }}
       >
         {children}
       </div>
 
-      <div
-        className={cn(styles.scrollable__scrollbar, { [styles.scrollable__scrollbar_hide]: !isScrollbar })}
-        ref={scrollbarRef}
-      >
+      <div ref={scrollbarRef} className={cn(styles.scrollbar, { [styles.scrollbar_hide]: !isScrollbar })}>
         <div
           ref={thumbRef}
-          className={styles.scrollable__thumb}
+          className={styles.scrollbar__thumb}
           style={{ height: thumbHeight, top: thumbTop }}
           onMouseDown={() => setIsMouseDown(true)}
-        ></div>
+        />
       </div>
     </div>
   );
