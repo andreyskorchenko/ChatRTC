@@ -16,39 +16,34 @@ export const Scrollable = ({ children }: PropsWithChildren) => {
 
   const scrollableHeight = useMemo(() => {
     const height = contentHeight - containerHeight;
-    return height < 0 ? 0 : Math.floor(height);
+    return height <= 0 ? 0 : Math.floor(height);
   }, [contentHeight]);
 
   const isScrollbar = useMemo(() => scrollableHeight > 0, [scrollableHeight]);
 
   const thumbHeight = useMemo(() => {
     const height = (100 / (contentHeight || 1)) * containerHeight * (scrollbarHeight / 100);
-    return height <= 16 ? 16 : height >= scrollbarHeight ? scrollbarHeight : height;
+    return height <= 16 ? 16 : height;
   }, [contentHeight]);
 
   const thumbTop = useMemo(() => {
     const percentScrolling = (100 / (scrollableHeight || 1)) * Math.abs(scrollPosition);
-    return Math.ceil(((scrollbarHeight - thumbHeight) / 100) * percentScrolling);
+    const top = Math.ceil(((scrollbarHeight - thumbHeight) / 100) * percentScrolling);
+    return top <= 0 ? 0 : top;
   }, [scrollableHeight, scrollPosition]);
 
   const handlerScrolling = ({ deltaY }: WheelEvent) => {
     if (deltaY === 0) return;
-
-    // console.log('[CONTAINER]:', containerRef.current?.clientHeight);
-    // console.log('[CONTENT]:', contentRef.current?.clientHeight);
-    // console.log('[SCROLLBAR]:', scrollbarRef.current?.clientHeight);
-    // console.log('[THUMB]:', thumbRef.current?.clientHeight);
-
     setScrollPosition((prev) => {
-      const position = deltaY > 0 ? prev - 25 : prev + 25;
-      return position >= 0 ? 0 : Math.abs(position) >= scrollableHeight ? scrollableHeight * -1 : position;
+      const position = prev + (deltaY < 0 ? (deltaY < -100 ? -100 : deltaY) : deltaY > 100 ? 100 : deltaY) * -1;
+      return position >= 0 ? 0 : Math.max(position, scrollableHeight);
     });
   };
 
   const draggingThumb = ({ clientY }: MouseEvent<HTMLDivElement>) => {
-    if (!isMouseDown && containerHeight > 0) return;
-    const percentDrag = (100 / containerHeight) * clientY;
-    setScrollPosition(Math.ceil((scrollableHeight / 100) * (percentDrag <= 0 ? 0 : percentDrag)) * -1);
+    if (!isMouseDown) return;
+    const position = Math.ceil((100 / (containerHeight || 1)) * clientY * (scrollableHeight / 100));
+    setScrollPosition(position <= 0 ? 0 : Math.min(position, scrollableHeight) * -1);
   };
 
   const canceledSelectionAndDraggable = (e: Event) => {
