@@ -35,8 +35,8 @@ export const Scrollable = ({ children }: PropsWithChildren) => {
   const handlerScrolling = ({ deltaY }: WheelEvent) => {
     if (deltaY === 0) return;
     setScrollPosition((prev) => {
-      const position = prev + (deltaY < 0 ? (deltaY < -100 ? -100 : deltaY) : deltaY > 100 ? 100 : deltaY) * -1;
-      return position >= 0 ? 0 : Math.max(position, scrollableHeight);
+      const position = prev + deltaY * -1;
+      return position >= 0 ? 0 : Math.min(Math.abs(position), scrollableHeight) * -1;
     });
   };
 
