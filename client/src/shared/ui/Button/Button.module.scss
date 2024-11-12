@@ -2,9 +2,16 @@
 	padding: 0 16px;
 	cursor: pointer;
 	color: #fff;
+	font-family: 'Courier New', Courier, monospace;
+
+	&:disabled {
+		background-color: #292f3a;
+		cursor: default;
+		color: $secondary;
+	}
 
 	&_type_primary {
-		background-color: #1e5fff;
+		background-color: $primary;
 	}
 
 	&_size_l {
