@@ -1,6 +1,6 @@
 import { InputHTMLAttributes } from 'react';
+import { Sizes } from '@/shared/model';
 
-type Sizes = 'l' | 's' | 'm';
 export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
 	size?: Sizes;
 };
