@@ -1,0 +1,27 @@
+.button {
+	padding: 0 16px;
+	cursor: pointer;
+	color: #fff;
+
+	&_type_primary {
+		background-color: #1e5fff;
+	}
+
+	&_size_l {
+		height: 44px;
+		border-radius: 8px;
+		padding: 0 16px;
+	}
+
+	&_size_s {
+		height: 38px;
+		border-radius: 6px;
+		padding: 0 12px;
+	}
+
+	&_size_m {
+		height: 32px;
+		border-radius: 4px;
+		padding: 0 8px;
+	}
+}
