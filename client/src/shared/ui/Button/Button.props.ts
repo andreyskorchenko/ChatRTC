@@ -1,9 +1,9 @@
 import { PropsWithChildren, ButtonHTMLAttributes } from 'react';
-import { Sizes, Types } from '@/shared/model';
+import { ComponentSizes, ComponentTypes } from '@/shared/model';
 
 export type ButtonProps = PropsWithChildren<
 	Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> & {
-		size?: Sizes;
-		type?: Types;
+		size?: ComponentSizes;
+		type?: ComponentTypes;
 	}
 >;
