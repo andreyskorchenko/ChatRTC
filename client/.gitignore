@@ -3,6 +3,8 @@ dist
 node_modules
 build
 
+certs
+
 # Logs
 logs
 *.log
