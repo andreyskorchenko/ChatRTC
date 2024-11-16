@@ -5,13 +5,16 @@
 	font-family: 'Courier New', Courier, monospace;
 
 	&:disabled {
-		background-color: #292f3a;
+		background-color: #292c33;
 		cursor: default;
 		color: $secondary;
 	}
 
 	&_type_primary {
 		background-color: $primary;
+		&:not(:disabled):hover {
+			background-color: $hover_primary;
+		}
 	}
 
 	&_size_l {
