@@ -1,0 +1,97 @@
+.main {
+	padding-top: 84px;
+}
+
+.rooms {
+	padding: 20px;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 20px;
+
+	@media screen and (max-width: 1200px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	@media screen and (max-width: 960px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@media screen and (max-width: 580px) {
+		grid-template-columns: repeat(1, 1fr);
+	}
+}
+
+.room {
+	width: 100%;
+	padding-top: 75%;
+	background-color: #292c33;
+	border-radius: 10px;
+	overflow: hidden;
+	position: relative;
+
+	&__container {
+		@include flex(row nowrap, center, center);
+		width: 100%;
+		height: 100%;
+		padding-bottom: 45px;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+	}
+
+	&__button {
+		/* transition: transform background 0.15s ease-in-out; */
+	}
+
+	&__panel {
+		@include flex(row nowrap, center, space-between);
+		width: 100%;
+		height: 45px;
+		border-top: 1px solid #353941;
+		padding: 0 20px;
+		color: #fff;
+		position: absolute;
+		bottom: 0;
+	}
+
+	&__online {
+		position: relative;
+
+		&:before {
+			content: '';
+			background-color: #353941;
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			transform: translateY(-50%);
+			position: absolute;
+			top: 50%;
+			right: calc(100% + 5px);
+		}
+
+		&_true:before {
+			background-color: greenyellow;
+		}
+	}
+}
+
+.create-room {
+	@include flex(row nowrap, flex-start, center, 10px);
+	width: 100%;
+	background-color: #212429;
+	box-shadow: 0 0 3px 0 rgba(0, 0, 10, 0.75);
+	padding: 20px 0;
+	z-index: 1;
+	position: fixed;
+	top: 0;
+	/* &:before {
+		content: '';
+		width: 100%;
+		height: 1px;
+		background-color: #353941;
+		position: absolute;
+		bottom: 0;
+	} */
+}
