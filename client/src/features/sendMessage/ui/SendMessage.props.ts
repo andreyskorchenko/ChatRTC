@@ -1,3 +1,3 @@
 export type SendMessageProps = {
-	roomId: string;
+	roomId?: string;
 };
