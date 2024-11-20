@@ -1,7 +1,6 @@
 .input {
-	width: 280px;
 	border-radius: 8px;
-	border: 1px solid #353941;
+	border: 1px solid $bg-light-gray;
 	transition: border 0.15s ease-in-out;
 	overflow: hidden;
 
@@ -10,25 +9,25 @@
 	}
 
 	&_size_l {
-		height: 44px;
+		height: 45px;
 	}
 
 	&_size_s {
-		height: 38px;
+		height: 40px;
 		border-radius: 6px;
 	}
 
 	&_size_m {
-		height: 32px;
+		height: 35px;
 		border-radius: 4px;
 	}
 
 	input {
 		width: 100%;
 		height: 100%;
-		background-color: #292c33;
+		background-color: $color-white;
 		font-family: 'Courier New', Courier, monospace;
-		color: #f9fafa;
+		color: $color-black;
 		padding: 0 16px;
 
 		&::placeholder {
