@@ -1,37 +1,69 @@
 .button {
-	padding: 0 16px;
 	cursor: pointer;
-	color: #fff;
 	font-family: 'Courier New', Courier, monospace;
 
 	&:disabled {
-		background-color: #292c33;
-		cursor: default;
-		color: $secondary;
+		cursor: not-allowed;
 	}
 
 	&_type_primary {
+		color: $color-white;
 		background-color: $primary;
+
+		&:disabled {
+			background-color: $bg-light-gray;
+			color: $secondary;
+		}
+
 		&:not(:disabled):hover {
 			background-color: $hover_primary;
 		}
 	}
 
+	&_type_outline {
+		background-color: transparent;
+		border: 1px solid $primary;
+		color: $primary;
+
+		&:disabled {
+			border: 1px solid $bg-light-gray;
+			color: $secondary;
+		}
+
+		&:not(:disabled):hover {
+			border: 1px solid $hover_primary;
+		}
+	}
+
+	&_type_danger {
+		color: $color-white;
+		background-color: $danger;
+
+		&:disabled {
+			background-color: $bg-light-gray;
+			color: $secondary;
+		}
+
+		&:not(:disabled):hover {
+			background-color: $hover-danger;
+		}
+	}
+
 	&_size_l {
 		height: 44px;
-		border-radius: 8px;
+		border-radius: 10px;
 		padding: 0 16px;
 	}
 
 	&_size_s {
 		height: 38px;
-		border-radius: 6px;
+		border-radius: 8px;
 		padding: 0 12px;
 	}
 
 	&_size_m {
 		height: 32px;
-		border-radius: 4px;
+		border-radius: 6px;
 		padding: 0 8px;
 	}
 }
