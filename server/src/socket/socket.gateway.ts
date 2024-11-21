@@ -19,9 +19,11 @@ import {
 	CreateRoomDto,
 	ConnectToRoomDto,
 	DisconnectOfRoomDto,
-	ShareSdpOffer,
-	ShareSdpAnswer,
-	ShareIceCandidate
+	ShareSdpOfferDto,
+	ShareSdpAnswerDto,
+	ShareIceCandidateDto,
+	SendMessageDto,
+	GetListMessagesDto
 } from '@/socket/dto';
 
 @WebSocketGateway({
@@ -63,6 +65,7 @@ export class SocketGateway implements OnGatewayDisconnect {
 			this.rooms.set(roomId, {
 				name: name,
 				clients: new Map(),
+				messages: [],
 				timestamp: new Date().toString()
 			});
 
@@ -104,7 +107,7 @@ export class SocketGateway implements OnGatewayDisconnect {
 	}
 
 	@SubscribeMessage(SocketEvents.SHARE_SDP_OFFER)
-	shareSdpOffer(@ConnectedSocket() client: Socket, @MessageBody() { roomId, peerId, offer }: ShareSdpOffer) {
+	shareSdpOffer(@ConnectedSocket() client: Socket, @MessageBody() { roomId, peerId, offer }: ShareSdpOfferDto) {
 		const room = this.rooms.get(roomId);
 
 		if (room) {
@@ -122,7 +125,7 @@ export class SocketGateway implements OnGatewayDisconnect {
 	}
 
 	@SubscribeMessage(SocketEvents.SHARE_SDP_ANSWER)
-	shareSdpAnswer(@ConnectedSocket() client: Socket, @MessageBody() { roomId, peerId, answer }: ShareSdpAnswer) {
+	shareSdpAnswer(@ConnectedSocket() client: Socket, @MessageBody() { roomId, peerId, answer }: ShareSdpAnswerDto) {
 		const room = this.rooms.get(roomId);
 
 		if (room) {
@@ -142,7 +145,7 @@ export class SocketGateway implements OnGatewayDisconnect {
 	@SubscribeMessage(SocketEvents.SHARE_ICE_CANDIDATE)
 	shareIceCandidate(
 		@ConnectedSocket() client: Socket,
-		@MessageBody() { roomId, peerId, candidate }: ShareIceCandidate
+		@MessageBody() { roomId, peerId, candidate }: ShareIceCandidateDto
 	) {
 		const room = this.rooms.get(roomId);
 
@@ -158,6 +161,38 @@ export class SocketGateway implements OnGatewayDisconnect {
 		}
 
 		client.emit(SocketEvents.SHARE_ICE_CANDIDATE_ERROR);
+	}
+
+	@UseFilters(new WsExceptionsFilter())
+	@UsePipes(new ValidationPipe())
+	@SubscribeMessage(SocketEvents.GET_LIST_MESSAGES)
+	getListMessages(@ConnectedSocket() client: Socket, @MessageBody() { roomId }: GetListMessagesDto) {
+		const room = this.rooms.get(roomId);
+
+		if (room && room.clients.has(client.id) && room.messages.length) {
+			client.emit(SocketEvents.SHARE_MESSAGES, room.messages);
+		}
+	}
+
+	@UseFilters(new WsExceptionsFilter())
+	@UsePipes(new ValidationPipe())
+	@SubscribeMessage(SocketEvents.SEND_MESSAGE)
+	sendMessage(@ConnectedSocket() client: Socket, @MessageBody() { roomId, message }: SendMessageDto) {
+		const room = this.rooms.get(roomId);
+
+		if (room && room.clients.has(client.id)) {
+			const newMessage = {
+				id: randomUUID(),
+				name: 'Andrey Skorchenko',
+				timestamp: new Date().toString(),
+				message
+			};
+
+			room.messages.push(newMessage);
+			room.clients.forEach((roomClient) => {
+				roomClient.emit(SocketEvents.SHARE_NEW_MESSAGE, newMessage);
+			});
+		}
 	}
 
 	@UseFilters(new WsExceptionsFilter())
