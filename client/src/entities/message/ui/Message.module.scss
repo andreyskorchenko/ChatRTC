@@ -1,0 +1,43 @@
+.message {
+	width: 100%;
+	position: relative;
+	padding: 20px 0 0 46px;
+
+	&__panel {
+		@include flex(row nowrap, flex-start, space-between);
+		width: 100%;
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+
+		span {
+			color: $secondary;
+			font-size: 12px;
+		}
+	}
+
+	&__userinfo {
+		@include flex(row nowrap, flex-start, flex-start, 10px);
+		color: $color-black;
+		font-weight: bold;
+		font-size: 14px;
+	}
+
+	&__userpic {
+		@include flex(row nowrap, center, center);
+		width: 36px;
+		height: 36px;
+		background-color: #f0f1f3;
+		border-radius: 50%;
+		overflow: hidden;
+	}
+
+	&__content {
+		background-color: #f0f1f3;
+		border-radius: 8px;
+		overflow-wrap: break-word;
+		color: $color-black;
+		padding: 5px 10px;
+	}
+}
