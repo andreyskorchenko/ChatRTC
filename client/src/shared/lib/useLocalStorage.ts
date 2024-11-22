@@ -1,0 +1,24 @@
+type DateType<T> = Record<keyof T, T[keyof T]>;
+
+export const useLocalStorage = () => {
+	const set = (key: string, value: Record<string, unknown>) => {
+		try {
+			localStorage.setItem(key, JSON.stringify(value));
+			return true;
+		} catch (err) {
+			return false;
+		}
+	};
+
+	const get = <T extends DateType<T>>(key: string): DateType<T> | null => {
+		try {
+			const value = localStorage.getItem(key);
+			if (!value) return null;
+			return JSON.parse(value);
+		} catch (err) {
+			return null;
+		}
+	};
+
+	return { set, get };
+};
