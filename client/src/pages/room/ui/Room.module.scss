@@ -1,26 +1,72 @@
 .room {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	padding: 20px;
-	gap: 20px;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+	padding: 0 0 70px 0;
+	transition: 0.25s ease-in-out;
+	position: relative;
 
-	@media screen and (max-width: 1200px) {
-		grid-template-columns: repeat(3, 1fr);
+	&_chat_true {
+		padding: 0 300px 70px 0;
 	}
 
-	@media screen and (max-width: 960px) {
-		grid-template-columns: repeat(2, 1fr);
+	&__chat {
+		width: 300px;
+		height: calc(100% - 70px);
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+
+		&-enter {
+			transform: translateX(100%);
+		}
+
+		&-enter-active {
+			transform: translateX(0);
+			transition: transform 0.25s ease-in;
+		}
+
+		&-exit {
+			transform: translateX(0);
+		}
+
+		&-exit-active {
+			transform: translateX(100%);
+			transition: transform 0.25s ease-in;
+		}
 	}
 
-	@media screen and (max-width: 580px) {
-		grid-template-columns: repeat(1, 1fr);
+	&__panel {
+		@include flex(row nowrap, center, center);
+		height: 70px;
+		box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+		background-color: $color-white;
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		left: 0;
 	}
 
-	@media screen and (max-width: 920px) {
-		font-size: 24px;
+	&__call {
+		background-color: $color-white;
 	}
 
-	@media screen and (max-width: 560px) {
-		font-size: 18px;
+	&__messages {
+		transform: translateY(-50%);
+		position: absolute;
+		top: 50%;
+		right: 20px;
+
+		i {
+			background-color: $bg-light-gray;
+			transition: background 0.15s ease-in-out;
+		}
+
+		&_active {
+			i {
+				background-color: $primary;
+			}
+		}
 	}
 }
