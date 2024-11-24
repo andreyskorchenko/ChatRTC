@@ -3,6 +3,7 @@
 	height: 100%;
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: min-content;
 	align-items: flex-start;
 	overflow-x: hidden;
 	overflow-y: auto;
