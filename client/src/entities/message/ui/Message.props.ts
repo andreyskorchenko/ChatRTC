@@ -1,5 +1,5 @@
-import { Message } from '../model';
+import { MessageType } from '../model';
 
 export type MessageProps = {
-	message: Message;
+	message: MessageType;
 };
