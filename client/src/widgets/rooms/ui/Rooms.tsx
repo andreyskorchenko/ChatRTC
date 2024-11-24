@@ -1,9 +1,9 @@
 import { Room } from '@/entities/room/ui';
-import { useRoomsApi } from '../api';
+import { useRooms } from '../lib';
 import styles from './Rooms.module.scss';
 
 export const Rooms = () => {
-	const [rooms] = useRoomsApi();
+	const { rooms } = useRooms();
 
 	return (
 		<div className={styles.rooms}>
