@@ -13,7 +13,7 @@ export const useLocalStorage = () => {
 	const get = <T extends DateType<T>>(key: string): DateType<T> | null => {
 		try {
 			const value = localStorage.getItem(key);
-			if (!value) return null;
+			if (typeof value !== 'string') return null;
 			return JSON.parse(value);
 		} catch (err) {
 			return null;
