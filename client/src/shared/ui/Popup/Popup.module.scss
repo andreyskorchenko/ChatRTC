@@ -1,0 +1,48 @@
+.popup {
+	background-color: $color-white;
+	border-radius: 10px;
+	overflow: hidden;
+	z-index: 1;
+
+	&-enter {
+		opacity: 0;
+		transform: translateY(10%);
+	}
+
+	&-enter-active {
+		opacity: 1;
+		transform: translateY(0);
+		transition: 0.15s linear;
+	}
+
+	&-exit {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	&-exit-active {
+		opacity: 0;
+		transform: translateY(10%);
+		transition: 0.15s linear;
+	}
+
+	&__header {
+		@include flex(row nowrap, center, space-between);
+		width: 100%;
+		height: 60px;
+		overflow: hidden;
+		position: relative;
+		padding-right: 55px;
+	}
+
+	&__close {
+		transform: translateY(-50%);
+		position: absolute;
+		top: 50%;
+		right: 10px;
+	}
+
+	&__icon {
+		background-color: $bg-light-gray;
+	}
+}
