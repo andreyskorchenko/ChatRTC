@@ -21,7 +21,6 @@ export const Popup = ({ opened, headerRender, className, closeHandle, children }
 	const [isMounted] = useMounted(opened, 150);
 
 	useEffect(() => {
-		console.log(1);
 		const escapeHandle = ({ key }: KeyboardEvent) => {
 			if (key !== 'Escape') return;
 			closeHandle();
