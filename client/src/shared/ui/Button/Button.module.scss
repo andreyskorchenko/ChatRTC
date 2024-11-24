@@ -1,6 +1,7 @@
 .button {
-	cursor: pointer;
+	background-color: $color-white;
 	font-family: 'Courier New', Courier, monospace;
+	cursor: pointer;
 
 	&:disabled {
 		cursor: not-allowed;
