@@ -1,12 +1,11 @@
 import { Message } from '@/entities/message/ui';
 import { SendMessage } from '@/features/sendMessage/ui';
-
-import { useMessagesApi } from '../api';
+import { useMessages } from '../lib';
 import { ChatProps } from './Chat.props';
 import styles from './Chat.module.scss';
 
 export const Chat = ({ roomId }: ChatProps) => {
-	const [messages] = useMessagesApi(roomId);
+	const { messages } = useMessages(roomId);
 
 	return (
 		<div className={styles.chat}>
