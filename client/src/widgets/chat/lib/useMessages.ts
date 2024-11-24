@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MessageSchema, MessageType } from '@/entities/message/model';
+import { messageSchema, MessageType } from '@/entities/message/model';
 import { useSocketContext } from '@/shared/lib';
 
 export const useMessages = (roomId?: string) => {
@@ -11,11 +11,10 @@ export const useMessages = (roomId?: string) => {
 		pub('GET_LIST_MESSAGES', { roomId });
 		sub('SHARE_MESSAGES', (response) => {
 			try {
-				const messages = MessageSchema.array()
+				const messages = messageSchema
+					.array()
 					.parse(response)
-					.sort((a, b) => {
-						return b.timestamp.getTime() - a.timestamp.getTime();
-					});
+					.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
 				setMessages(messages);
 			} catch (err) {
 				console.error(err);
@@ -24,7 +23,7 @@ export const useMessages = (roomId?: string) => {
 
 		sub('SHARE_NEW_MESSAGE', (response) => {
 			try {
-				const message = MessageSchema.parse(response);
+				const message = messageSchema.parse(response);
 				setMessages((prev) => [message, ...prev]);
 			} catch (err) {
 				console.error(err);
