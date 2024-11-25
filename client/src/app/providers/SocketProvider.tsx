@@ -7,6 +7,7 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
 	const { username } = useUserContext();
 	const socket = useRef(
 		io(import.meta.env.VITE_SOCKET_URL, {
+			path: '/ws',
 			auth: { username }
 		})
 	);
