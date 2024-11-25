@@ -7,7 +7,6 @@ export type SubFn<T> = (data: T) => void;
 export type UnSubFn = (...args: unknown[]) => void;
 
 type SocketContext = {
-	isConnected: boolean;
 	pub: (event: Event, payload?: PubPayload) => void;
 	sub: <SubData>(event: Event, fn: SubFn<SubData>) => void;
 	unSub: (event: Event, listener?: UnSubFn) => void;
