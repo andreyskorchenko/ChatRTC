@@ -3,7 +3,7 @@ import { useSocketContext } from '@/shared/lib';
 import { roomsSchema, RoomType } from '@/entities/room/model';
 
 export const useRooms = () => {
-	const { pub, sub } = useSocketContext();
+	const { pub, sub, unSub } = useSocketContext();
 	const [rooms, setRooms] = useState<RoomType[]>([]);
 
 	useEffect(() => {
@@ -19,6 +19,10 @@ export const useRooms = () => {
 				console.error(err);
 			}
 		});
+
+		return () => {
+			unSub('SHARE_ROOMS');
+		};
 	}, []);
 
 	return { rooms };
