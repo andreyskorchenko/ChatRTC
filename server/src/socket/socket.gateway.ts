@@ -28,6 +28,7 @@ import {
 } from '@/socket/dto';
 
 @WebSocketGateway({
+	path: '/ws',
 	cors: {
 		origin: '*'
 	}
