@@ -1,24 +1,15 @@
-import { PropsWithChildren, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
+import { PropsWithChildren, useRef } from 'react';
 import { Event, PubPayload, SubFn, SocketContext } from '@/shared/context';
-// import { useUserContext } from '@/shared/lib';
+import { useUserContext } from '@/shared/lib';
 
 export const SocketProvider = ({ children }: PropsWithChildren) => {
-	// const { username } = useUserContext();
-	const [isConnected, setIsConnected] = useState(false);
+	const { username } = useUserContext();
 	const socket = useRef(
 		io(import.meta.env.VITE_SOCKET_URL, {
-			auth: {}
+			auth: { username }
 		})
 	);
-
-	socket.current.on('connect', () => {
-		setIsConnected(true);
-	});
-
-	socket.current.on('disconnect', () => {
-		setIsConnected(false);
-	});
 
 	const pub = (event: Event, payload?: PubPayload) => {
 		socket.current.emit(event, payload);
@@ -32,5 +23,5 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
 		socket.current.off(event, listener);
 	};
 
-	return <SocketContext.Provider value={{ isConnected, pub, sub, unSub }}>{children}</SocketContext.Provider>;
+	return <SocketContext.Provider value={{ pub, sub, unSub }}>{children}</SocketContext.Provider>;
 };
