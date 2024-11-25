@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 // 🤔 Maybe ws? https://www.npmjs.com/package/ws 🤔
 import { Server, Socket } from 'socket.io';
-import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import { UseFilters, UsePipes, UseGuards, ValidationPipe } from '@nestjs/common';
 
 import {
 	WebSocketGateway,
@@ -14,6 +14,7 @@ import {
 
 import { SocketEvents, Room, ResponseShareRoom } from '@/socket/types';
 import { WsExceptionsFilter } from '@/socket/filters';
+import { AuthGuard } from '@/socket/auth.guard';
 
 import {
 	CreateRoomDto,
@@ -55,8 +56,8 @@ export class SocketGateway implements OnGatewayDisconnect {
 		client.emit(SocketEvents.SHARE_ROOMS, this.getShareRooms());
 	}
 
-	@UseFilters(new WsExceptionsFilter())
 	@UsePipes(new ValidationPipe())
+	@UseFilters(new WsExceptionsFilter())
 	@SubscribeMessage(SocketEvents.CREATE_ROOM)
 	createRoom(@ConnectedSocket() client: Socket, @MessageBody() { name }: CreateRoomDto) {
 		if (!this.isExistsRoomName(name)) {
@@ -78,8 +79,8 @@ export class SocketGateway implements OnGatewayDisconnect {
 		}
 	}
 
-	@UseFilters(new WsExceptionsFilter())
 	@UsePipes(new ValidationPipe())
+	@UseFilters(new WsExceptionsFilter())
 	@SubscribeMessage(SocketEvents.CONNECT_TO_ROOM)
 	connectToRoom(@ConnectedSocket() client: Socket, @MessageBody() { roomId }: ConnectToRoomDto) {
 		const room = this.rooms.get(roomId);
@@ -163,8 +164,8 @@ export class SocketGateway implements OnGatewayDisconnect {
 		client.emit(SocketEvents.SHARE_ICE_CANDIDATE_ERROR);
 	}
 
-	@UseFilters(new WsExceptionsFilter())
 	@UsePipes(new ValidationPipe())
+	@UseFilters(new WsExceptionsFilter())
 	@SubscribeMessage(SocketEvents.GET_LIST_MESSAGES)
 	getListMessages(@ConnectedSocket() client: Socket, @MessageBody() { roomId }: GetListMessagesDto) {
 		const room = this.rooms.get(roomId);
@@ -174,16 +175,18 @@ export class SocketGateway implements OnGatewayDisconnect {
 		}
 	}
 
-	@UseFilters(new WsExceptionsFilter())
+	@UseGuards(AuthGuard)
 	@UsePipes(new ValidationPipe())
+	@UseFilters(new WsExceptionsFilter())
 	@SubscribeMessage(SocketEvents.SEND_MESSAGE)
 	sendMessage(@ConnectedSocket() client: Socket, @MessageBody() { roomId, message }: SendMessageDto) {
+		const username = client.handshake.auth.username;
 		const room = this.rooms.get(roomId);
 
 		if (room && room.clients.has(client.id)) {
 			const newMessage = {
 				id: randomUUID(),
-				name: 'Andrey Skorchenko',
+				name: username,
 				timestamp: new Date().toString(),
 				message
 			};
@@ -195,8 +198,8 @@ export class SocketGateway implements OnGatewayDisconnect {
 		}
 	}
 
-	@UseFilters(new WsExceptionsFilter())
 	@UsePipes(new ValidationPipe())
+	@UseFilters(new WsExceptionsFilter())
 	@SubscribeMessage(SocketEvents.DISCONNECT_OF_ROOM)
 	disconnectOfRoom(@ConnectedSocket() client: Socket, @MessageBody() { roomId }: DisconnectOfRoomDto) {
 		const room = this.rooms.get(roomId);
