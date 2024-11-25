@@ -36,20 +36,7 @@ export const useWebRTC = (roomId?: string) => {
 				try {
 					localMediaStream.current = await navigator.mediaDevices.getUserMedia({
 						audio: true,
-						video: {
-							width: {
-								min: 480,
-								max: 960
-							},
-							height: {
-								min: 240,
-								max: 480
-							},
-							frameRate: {
-								min: 10,
-								max: 60
-							}
-						}
+						video: true
 					});
 
 					localVideoElement.srcObject = localMediaStream.current;
