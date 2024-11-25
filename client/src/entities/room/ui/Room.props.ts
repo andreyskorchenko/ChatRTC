@@ -1,5 +1,5 @@
-import { Room } from '../model';
+import { RoomType } from '../model';
 
 export type RoomProps = {
-	info: Pick<Room, 'id' | 'name' | 'online'>;
+	info: Pick<RoomType, 'id' | 'name' | 'online'>;
 };
