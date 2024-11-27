@@ -82,7 +82,7 @@ export const useWebRTC = (roomId?: string) => {
 			};
 
 			peer.onicecandidate = ({ candidate }) => {
-				if (candidate && peer.remoteDescription) {
+				if (candidate) {
 					pub('SHARE_ICE_CANDIDATE', {
 						roomId,
 						peerId,
