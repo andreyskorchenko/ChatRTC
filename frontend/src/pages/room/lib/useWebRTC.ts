@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LOCAL_VIDEO_ELEMENT } from '@/entities/video/model';
-import { useSocketContext, useAbortController } from '@/shared/lib';
+import { useSocketContext } from '@/shared/lib';
 
 import {
 	AddPeerPayload,
@@ -15,15 +15,14 @@ import {
 export const useWebRTC = (roomId?: string) => {
 	const navigate = useNavigate();
 	const { pub, sub, unSub } = useSocketContext();
-	const { abortController } = useAbortController();
 
 	const [clients, setClients] = useState<string[]>([LOCAL_VIDEO_ELEMENT]);
 	const peerConnections = useRef<Map<string, RTCPeerConnection>>(new Map());
-	const videoElements = useRef<Map<string, HTMLVideoElement | null>>(new Map([[LOCAL_VIDEO_ELEMENT, null]]));
+	const videoElements = useRef<Map<string, HTMLVideoElement>>(new Map());
 	const localMediaStream = useRef<MediaStream | null>(null);
 
 	const setVideoElement = useCallback((peerId: string, element: HTMLVideoElement | null) => {
-		if (element && !videoElements.current.get(peerId)) {
+		if (element) {
 			videoElements.current.set(peerId, element);
 		}
 	}, []);
@@ -31,7 +30,7 @@ export const useWebRTC = (roomId?: string) => {
 	useEffect(() => {
 		const localVideoElement = videoElements.current.get(LOCAL_VIDEO_ELEMENT);
 
-		if (localVideoElement && !localVideoElement.srcObject) {
+		if (localVideoElement) {
 			const setLocalMediaStream = async () => {
 				try {
 					localMediaStream.current = await navigator.mediaDevices.getUserMedia({
@@ -48,7 +47,7 @@ export const useWebRTC = (roomId?: string) => {
 
 			setLocalMediaStream();
 		}
-	}, [roomId]);
+	}, []);
 
 	useEffect(() => {
 		sub('CONNECT_TO_ROOM_ERROR', () => {
@@ -56,8 +55,15 @@ export const useWebRTC = (roomId?: string) => {
 		});
 
 		sub<AddPeerPayload>('ADD_PEER', async ({ peerId, isOfferCreate }) => {
-			if (clients.includes(peerId)) return;
-			setClients((prev) => [...prev, peerId]);
+			setClients((prev) => {
+				return prev.includes(peerId) ? prev : [...prev, peerId];
+			});
+
+			const prevPeer = peerConnections.current.get(peerId);
+			if (prevPeer) {
+				prevPeer.close();
+				peerConnections.current.delete(peerId);
+			}
 
 			const peer = new RTCPeerConnection({ iceServers });
 			peerConnections.current.set(peerId, peer);
@@ -68,30 +74,22 @@ export const useWebRTC = (roomId?: string) => {
 				}
 			}
 
-			peer.addEventListener(
-				'track',
-				({ streams }) => {
-					const remoteVideoElement = videoElements.current.get(peerId);
-					if (remoteVideoElement) {
-						remoteVideoElement.srcObject = new MediaStream(streams[0].getTracks());
-					}
-				},
-				{ signal: abortController.signal }
-			);
+			peer.ontrack = ({ streams }) => {
+				const remoteVideoElement = videoElements.current.get(peerId);
+				if (remoteVideoElement) {
+					remoteVideoElement.srcObject = new MediaStream(streams[0].getTracks());
+				}
+			};
 
-			peer.addEventListener(
-				'icecandidate',
-				({ candidate }) => {
-					if (candidate && peer.remoteDescription) {
-						pub('SHARE_ICE_CANDIDATE', {
-							roomId,
-							peerId,
-							candidate
-						});
-					}
-				},
-				{ signal: abortController.signal }
-			);
+			peer.onicecandidate = ({ candidate }) => {
+				if (candidate && peer.remoteDescription) {
+					pub('SHARE_ICE_CANDIDATE', {
+						roomId,
+						peerId,
+						candidate
+					});
+				}
+			};
 
 			if (isOfferCreate) {
 				try {
@@ -114,7 +112,7 @@ export const useWebRTC = (roomId?: string) => {
 			if (!peer) return;
 
 			try {
-				await peer.setRemoteDescription(offer);
+				await peer.setRemoteDescription(new RTCSessionDescription(offer));
 				const answer = await peer.createAnswer();
 				await peer.setLocalDescription(new RTCSessionDescription(answer));
 
@@ -152,10 +150,11 @@ export const useWebRTC = (roomId?: string) => {
 
 		sub<RemovePeerPayload>('REMOVE_PEER', ({ peerId }) => {
 			const peer = peerConnections.current.get(peerId);
-			if (!peer) return;
+			if (peer) {
+				peer.close();
+				peerConnections.current.delete(peerId);
+			}
 
-			peer.close();
-			peerConnections.current.delete(peerId);
 			videoElements.current.delete(peerId);
 			setClients((prev) => prev.filter((clientPeerId) => clientPeerId !== peerId));
 		});
@@ -170,14 +169,14 @@ export const useWebRTC = (roomId?: string) => {
 			});
 
 			pub('DISCONNECT_OF_ROOM', { roomId });
-			unSub('CONNECT_TO_ROOM_ERROR');
 			unSub('ADD_PEER');
 			unSub('REMOVE_PEER');
 			unSub('SHARE_SDP_OFFER');
 			unSub('SHARE_SDP_ANSWER');
 			unSub('SHARE_ICE_CANDIDATE');
+			unSub('CONNECT_TO_ROOM_ERROR');
 		};
-	}, [roomId]);
+	}, []);
 
 	return { clients, setVideoElement };
 };
