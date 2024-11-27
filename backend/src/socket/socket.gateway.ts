@@ -88,22 +88,20 @@ export class SocketGateway implements OnGatewayDisconnect {
 		const room = this.rooms.get(roomId);
 
 		if (room && !room.clients.has(client.id)) {
+			room.clients.forEach((roomClient) => {
+				roomClient.emit(SocketEvents.ADD_PEER, {
+					peerId: client.id,
+					isOfferCreate: false
+				});
+
+				client.emit(SocketEvents.ADD_PEER, {
+					peerId: roomClient.id,
+					isOfferCreate: true
+				});
+			});
+
 			room.clients.set(client.id, client);
 			this.shareRooms();
-
-			room.clients.forEach((roomClient) => {
-				if (roomClient.id !== client.id) {
-					roomClient.emit(SocketEvents.ADD_PEER, {
-						peerId: client.id,
-						isOfferCreate: false
-					});
-
-					client.emit(SocketEvents.ADD_PEER, {
-						peerId: roomClient.id,
-						isOfferCreate: true
-					});
-				}
-			});
 		} else {
 			client.emit(SocketEvents.CONNECT_TO_ROOM_ERROR);
 		}
