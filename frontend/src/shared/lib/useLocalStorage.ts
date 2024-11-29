@@ -5,7 +5,7 @@ export const useLocalStorage = () => {
 		try {
 			localStorage.setItem(key, JSON.stringify(value));
 			return true;
-		} catch (err) {
+		} catch {
 			return false;
 		}
 	};
@@ -15,7 +15,7 @@ export const useLocalStorage = () => {
 			const value = localStorage.getItem(key);
 			if (typeof value !== 'string') return null;
 			return JSON.parse(value);
-		} catch (err) {
+		} catch {
 			return null;
 		}
 	};

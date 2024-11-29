@@ -14,7 +14,7 @@ export const Auth = () => {
 		if (userContext.username) {
 			navigate('/', { replace: true });
 		}
-	}, [userContext]);
+	}, [userContext.username, navigate]);
 
 	const submitHandle = () => {
 		const name = username.trim();

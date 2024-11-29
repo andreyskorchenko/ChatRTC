@@ -23,7 +23,7 @@ export const useRooms = () => {
 		return () => {
 			unSub('SHARE_ROOMS');
 		};
-	}, []);
+	}, [pub, sub, unSub]);
 
 	return { rooms };
 };

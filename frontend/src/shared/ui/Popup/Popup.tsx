@@ -35,7 +35,7 @@ export const Popup = ({ opened, headerRender, className, closeHandle, children }
 		return () => {
 			document.removeEventListener('keyup', escapeHandle);
 		};
-	}, [opened]);
+	}, [opened, closeHandle]);
 
 	return isMounted ? (
 		<Portal>

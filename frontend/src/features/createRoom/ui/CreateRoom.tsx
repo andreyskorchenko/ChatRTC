@@ -14,7 +14,7 @@ export const CreateRoom = () => {
 		return () => {
 			unSub('CREATED_ROOM');
 		};
-	}, []);
+	}, [sub, unSub]);
 
 	const createHandle = () => {
 		if (isDisabled) return;

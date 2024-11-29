@@ -11,7 +11,7 @@ export const useMounted = (opened: boolean, unmountedDelayMs: number) => {
 				setIsMounted(false);
 			}, unmountedDelayMs);
 		}
-	}, [opened]);
+	}, [opened, isMounted, unmountedDelayMs]);
 
 	return [isMounted];
 };

@@ -4,7 +4,7 @@ export const useAbortController = () => {
 	const abortController = useRef<AbortController>(new AbortController());
 
 	useEffect(() => {
-		return () => abortController.current.abort();
+		return () => abortController.current.abort(); // eslint-disable-line
 	}, []);
 
 	return {

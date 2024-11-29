@@ -48,7 +48,7 @@ export const useWebRTC = (roomId?: string) => {
 
 			setLocalMediaStream();
 		}
-	}, []);
+	}, [roomId, navigate, pub, sub, unSub]);
 
 	useEffect(() => {
 		sub('CONNECT_TO_ROOM_ERROR', () => {
@@ -157,6 +157,7 @@ export const useWebRTC = (roomId?: string) => {
 		});
 
 		return () => {
+			// eslint-disable-next-line
 			peerConnections.current.forEach((peer) => {
 				peer.close();
 			});
@@ -173,7 +174,7 @@ export const useWebRTC = (roomId?: string) => {
 			unSub('SHARE_ICE_CANDIDATE');
 			unSub('CONNECT_TO_ROOM_ERROR');
 		};
-	}, []);
+	}, [roomId, navigate, pub, sub, unSub]);
 
 	return { clients, setVideoElement };
 };

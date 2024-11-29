@@ -34,7 +34,7 @@ export const useMessages = (roomId?: string) => {
 			unSub('SHARE_MESSAGES');
 			unSub('SHARE_NEW_MESSAGE');
 		};
-	}, [roomId]);
+	}, [roomId, pub, sub, unSub]);
 
 	return { messages };
 };
