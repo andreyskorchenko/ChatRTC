@@ -22,6 +22,7 @@ coverage
 # IDEs and editors
 .idea
 .zed
+.vscode
 .project
 .classpath
 .c9/
