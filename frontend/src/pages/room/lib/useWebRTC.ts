@@ -60,12 +60,6 @@ export const useWebRTC = (roomId?: string) => {
 				return prev.includes(peerId) ? prev : [...prev, peerId];
 			});
 
-			const prevPeer = peerConnections.current.get(peerId);
-			if (prevPeer) {
-				prevPeer.close();
-				peerConnections.current.delete(peerId);
-			}
-
 			const peer = new RTCPeerConnection({ iceServers });
 			peerConnections.current.set(peerId, peer);
 
@@ -76,18 +70,9 @@ export const useWebRTC = (roomId?: string) => {
 			}
 
 			peer.ontrack = ({ streams }) => {
-				try {
-					const remoteVideoElement = videoElements.current.get(peerId);
-					if (remoteVideoElement) {
-						remoteVideoElement.srcObject = streams[0];
-						setTimeout(() => {
-							if (remoteVideoElement.paused) {
-								remoteVideoElement.play();
-							}
-						});
-					}
-				} catch (err) {
-					console.error(err);
+				const remoteVideoElement = videoElements.current.get(peerId);
+				if (remoteVideoElement) {
+					remoteVideoElement.srcObject = new MediaStream(streams[0].getTracks());
 				}
 			};
 
@@ -117,21 +102,6 @@ export const useWebRTC = (roomId?: string) => {
 					}
 				}
 			};
-
-			// if (isOfferCreate) {
-			// 	try {
-			// 		const offer = await peer.createOffer();
-			// 		await peer.setLocalDescription(new RTCSessionDescription(offer));
-
-			// 		pub('SHARE_SDP_OFFER', {
-			// 			roomId,
-			// 			peerId,
-			// 			offer
-			// 		});
-			// 	} catch (err) {
-			// 		console.error('Failed to create offer:', err);
-			// 	}
-			// }
 		});
 
 		sub<ShareSdpOfferPayload>('SHARE_SDP_OFFER', async ({ peerId, offer }) => {
