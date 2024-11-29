@@ -14,6 +14,7 @@
 		"paths": {
 			"@/*": ["./src/*"]
 		},
+		"project": "**/tsconfig.json",
 		"removeComments": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
@@ -21,6 +22,6 @@
 		"strictBindCallApply": false,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": false,
-		"target": "ES2021"
+		"target": "ES2021",
 	}
 }
