@@ -41,7 +41,8 @@ export const useWebRTC = (roomId?: string) => {
 					localVideoElement.srcObject = localMediaStream.current;
 					pub('CONNECT_TO_ROOM', { roomId });
 				} catch (err) {
-					console.error('Unable to access camera and/or microphone', err);
+					console.error('Unable to access camera and/or microphone:', err);
+					navigate('/', { replace: true });
 				}
 			};
 
