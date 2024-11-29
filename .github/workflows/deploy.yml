@@ -1,0 +1,28 @@
+name: CI/CD deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  delpoy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Deploy to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no root@194.58.114.212 << 'EOF'
+            cd /opt/ChatRTC
+            git pull origin master
+            docker-compose down
+            docker-compose up -d
+          EOF
