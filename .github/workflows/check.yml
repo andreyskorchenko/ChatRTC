@@ -1,4 +1,4 @@
-name: CI/CD for ChatRTC
+name: CI/CD check
 
 on:
   push:
