@@ -1,9 +1,4 @@
-@mixin flex(
-	$flow: row no-wrap,
-	$items: flex-start,
-	$content: flex-start,
-	$gap: 0
-) {
+@mixin flex($flow: row no-wrap, $items: flex-start, $content: flex-start, $gap: 0) {
 	display: flex;
 	flex-flow: $flow;
 	align-items: $items;
