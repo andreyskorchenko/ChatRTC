@@ -23,6 +23,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@194.58.114.212 << 'EOF'
             cd /opt/ChatRTC
             git pull origin master
-            docker-compose down
-            docker-compose up -d
+            docker compose down
+            docker compose up -d
           EOF
