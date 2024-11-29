@@ -12,46 +12,31 @@ git clone https://github.com/andreyskorchenko/ChatRTC.git
 cd ChatRTC
 ```
 
-## Project setup for client
-#### Change directory from `ChatRTC` project root folder
+### Run in docker
+> [!TIP]
+> ```
+> docker compose up -d
+> ```
 
-```
-cd client
-```
-
-#### Install dependencies
-
-```
-npm install
-```
-
-#### Compiles and hot-reloads for development
-
-```
-npm run serve
-```
-
-#### Compiles and minifies for production
-
-```
-npm run build
-```
-
-## Project setup for server
-#### Change directory from `ChatRTC` project root folder
-
-```
-cd server
-```
-
-#### Install dependencies
-
-```
-npm install
-```
-
-#### Compiles and hot-reloads
-
-```
-npm run server
-```
+### Run local dev
+> [!TIP]
+> Frontend
+> ```
+> cd frontend
+> ```
+> ```
+> npm ci
+> ```
+> ```
+> npm run dev
+> ```
+> Backend
+> ```
+> cd backend
+> ```
+> ```
+> npm ci
+> ```
+> ```
+> npm run start:dev
+> ```
