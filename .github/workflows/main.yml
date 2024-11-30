@@ -1,4 +1,4 @@
-name: CI/CD check
+name: CI/CD
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   frontend:
-    name: Frontend CI/CD
+    name: CI/CD Frontend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -27,7 +27,7 @@ jobs:
         run: npm run lint
 
   backend:
-    name: Backend CI/CD
+    name: CI/CD Backend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -45,3 +45,25 @@ jobs:
       - name: Run lint
         working-directory: backend
         run: npm run lint
+
+  deploy:
+    name: CI/CD Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Deploy to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no root@skorchenko.dev << 'EOF'
+            cd /opt/ChatRTC
+            git pull origin master
+            docker compose rm -sf frontend backend
+            docker compose down --rmi local
+            docker compose up -d
+          EOF
