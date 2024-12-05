@@ -12,6 +12,12 @@ git clone https://github.com/andreyskorchenko/ChatRTC.git
 cd ChatRTC
 ```
 
+#### Make .env file
+
+```
+echo "VITE_SOCKET_URL=http://localhost:3000" > ./frontend/.env
+```
+
 ### Run in docker
 > [!TIP]
 > ```
