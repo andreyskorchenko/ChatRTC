@@ -58,7 +58,11 @@ export class SocketGateway implements OnGatewayDisconnect {
 		client.emit(SocketEvents.SHARE_ROOMS, this.getShareRooms());
 	}
 
-	@UsePipes(new ValidationPipe())
+	@UsePipes(
+		new ValidationPipe({
+			whitelist: true
+		})
+	)
 	@UseFilters(new WsExceptionsFilter())
 	@SubscribeMessage(SocketEvents.CREATE_ROOM)
 	createRoom(@ConnectedSocket() client: Socket, @MessageBody() { name }: CreateRoomDto) {
@@ -81,7 +85,11 @@ export class SocketGateway implements OnGatewayDisconnect {
 		}
 	}
 
-	@UsePipes(new ValidationPipe())
+	@UsePipes(
+		new ValidationPipe({
+			whitelist: true
+		})
+	)
 	@UseFilters(new WsExceptionsFilter())
 	@SubscribeMessage(SocketEvents.CONNECT_TO_ROOM)
 	connectToRoom(@ConnectedSocket() client: Socket, @MessageBody() { roomId }: ConnectToRoomDto) {
@@ -164,7 +172,11 @@ export class SocketGateway implements OnGatewayDisconnect {
 		client.emit(SocketEvents.SHARE_ICE_CANDIDATE_ERROR);
 	}
 
-	@UsePipes(new ValidationPipe())
+	@UsePipes(
+		new ValidationPipe({
+			whitelist: true
+		})
+	)
 	@UseFilters(new WsExceptionsFilter())
 	@SubscribeMessage(SocketEvents.GET_LIST_MESSAGES)
 	getListMessages(@ConnectedSocket() client: Socket, @MessageBody() { roomId }: GetListMessagesDto) {
@@ -176,7 +188,11 @@ export class SocketGateway implements OnGatewayDisconnect {
 	}
 
 	@UseGuards(AuthGuard)
-	@UsePipes(new ValidationPipe())
+	@UsePipes(
+		new ValidationPipe({
+			whitelist: true
+		})
+	)
 	@UseFilters(new WsExceptionsFilter())
 	@SubscribeMessage(SocketEvents.SEND_MESSAGE)
 	sendMessage(@ConnectedSocket() client: Socket, @MessageBody() { roomId, message }: SendMessageDto) {
@@ -198,7 +214,11 @@ export class SocketGateway implements OnGatewayDisconnect {
 		}
 	}
 
-	@UsePipes(new ValidationPipe())
+	@UsePipes(
+		new ValidationPipe({
+			whitelist: true
+		})
+	)
 	@UseFilters(new WsExceptionsFilter())
 	@SubscribeMessage(SocketEvents.DISCONNECT_OF_ROOM)
 	disconnectOfRoom(@ConnectedSocket() client: Socket, @MessageBody() { roomId }: DisconnectOfRoomDto) {
