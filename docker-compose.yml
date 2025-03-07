@@ -1,19 +1,19 @@
 name: chatrtc
 services:
-    backend:
-        build:
-            context: ./backend
-            dockerfile: ./Dockerfile
-        container_name: backend
-        restart: always
-        ports:
-            - 3000:3000
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - 3000:3000
 
-    frontend:
-        build:
-            context: ./frontend
-            dockerfile: ./Dockerfile
-        container_name: frontend
-        restart: always
-        ports:
-            - 8080:3000
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - 8080:80

@@ -60,8 +60,8 @@ jobs:
 
       - name: Deploy to VPS
         run: |
-          ssh -o StrictHostKeyChecking=no root@skorchenko.dev << 'EOF'
-            cd /opt/ChatRTC
+          ssh -o StrictHostKeyChecking=no root@185.105.109.221 << 'EOF'
+            cd /opt/apps/ChatRTC
             git pull origin master
             docker compose rm -sf frontend backend
             docker compose down --rmi local
