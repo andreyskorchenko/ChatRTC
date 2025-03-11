@@ -4,7 +4,6 @@ COPY package*.json .
 RUN npm ci
 COPY . .
 RUN npm run build
-# RUN npm run build && npm cache clean --force
 
 FROM nginx:alpine
 COPY --from=build /opt/apps/chatrtc/frontend/dist /usr/share/nginx/html
