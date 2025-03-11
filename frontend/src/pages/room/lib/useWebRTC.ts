@@ -91,7 +91,7 @@ export const useWebRTC = (roomId?: string) => {
 					try {
 						const offer = await peer.createOffer();
 						await peer.setLocalDescription(new RTCSessionDescription(offer));
-						await new Promise((resolve) => setTimeout(resolve, 1000));
+						await new Promise((resolve) => setTimeout(resolve, 100));
 
 						pub('SHARE_SDP_OFFER', {
 							roomId,
