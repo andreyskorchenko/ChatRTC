@@ -38,7 +38,7 @@ export const CreateRoom = () => {
 				value={roomName}
 			/>
 			<Button type="primary" className={styles.create__button} disabled={isDisabled} onClick={createHandle}>
-				Create
+				CREATE
 			</Button>
 		</div>
 	);
