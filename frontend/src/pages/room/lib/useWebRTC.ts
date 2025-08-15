@@ -35,7 +35,7 @@ export const useWebRTC = (roomId?: string) => {
 				try {
 					localMediaStream.current = await navigator.mediaDevices.getUserMedia({
 						audio: true,
-						video: true
+						video: { facingMode: 'user' }
 					});
 
 					localVideoElement.srcObject = localMediaStream.current;
